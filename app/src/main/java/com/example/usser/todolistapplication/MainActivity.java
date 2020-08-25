@@ -1,11 +1,13 @@
 package com.example.usser.todolistapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import io.realm.Realm;
@@ -39,5 +41,21 @@ public class MainActivity extends AppCompatActivity {
         RealmResults<Task> tasks = realm.where(Task.class).findAll();
         TaskAdapter adapter = new TaskAdapter(this, tasks);
         mListView.setAdapter(adapter);
+        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, TaskEditActivity.class));
+            }
+        });
+
+        mListView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Task task = (Task) parent.getItemAtPosition(position);
+                        startActivity(new Intent(MainActivity.this,TaskEditActivity.class).putExtra("task_id", task.getId()));
+                    }
+                }
+        );
     }
 }
